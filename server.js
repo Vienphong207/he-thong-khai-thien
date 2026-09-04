@@ -1,27 +1,16 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
+const app = express();
 
-const PORT = process.env.PORT || 10000;
+// Phục vụ thư mục public làm static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-http.createServer((req, res) => {
-  let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
-  if (!fs.existsSync(filePath)) filePath = path.join(__dirname, 'index.html');
-  
-  const ext = path.extname(filePath);
-  let contentType = 'text/html';
-  if (ext === '.js') contentType = 'text/javascript';
-  if (ext === '.css') contentType = 'text/css';
-  if (ext === '.json') contentType = 'application/json';
-  if (ext === '.png') contentType = 'image/png';
-  if (ext === '.jpg') contentType = 'image/jpeg';
+// Trả về index.html cho các route còn lại
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      res.writeHead(500); res.end('Server Error');
-    } else {
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(content, 'utf-8');
-    }
-  });
-}).listen(PORT, () => console.log('Server running on port ' + PORT));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
