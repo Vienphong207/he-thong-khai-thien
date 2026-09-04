@@ -1,21 +1,16 @@
 {
-  "name": "Hệ Thống Thần Cấp Toàn Năng",
-  "short_name": "Hệ Thống",
-  "description": "Trạm Trợ Lực Thần Thức - Viễn Phong",
-  "start_url": "/?v=2026",
-  "display": "standalone",
-  "background_color": "#030712",
-  "theme_color": "#030712",
+  "short_name": "Phật Ma Đồng Thể",
+  "name": "Phật Ma Đồng Thể - Hệ Thống Khai Thiên",
   "icons": [
     {
       "src": "/avatar.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "/avatar.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg"
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "start_url": "/",
+  "background_color": "#0b0914",
+  "theme_color": "#0b0914",
+  "display": "standalone"
 }
