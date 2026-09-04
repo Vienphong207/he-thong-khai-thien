@@ -1,16 +1,33 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 
-// Phục vụ thư mục public làm static files
-app.use(express.static(path.join(__dirname, 'public')));
+const publicPath = path.join(__dirname, 'public');
 
-// Trả về index.html cho các route còn lại
+// Phục vụ tĩnh public
+app.use(express.static(publicPath));
+
+# Route quét trực tiếp avatar chấp nhận mọi kiểu viết hoa/thường
+app.get(['/avatar.jpg', '/avatar.png', '/avatar.jpeg', '/Avatar.jpg'], (req, res) => {
+    try {
+        if (fs.existsSync(publicPath)) {
+            const files = fs.readdirSync(publicPath);
+            const avatarFile = files.find(f => f.toLowerCase().startsWith('avatar'));
+            if (avatarFile) {
+                return res.sendFile(path.join(publicPath, avatarFile));
+            }
+        }
+        res.status(404).send('Avatar file missing on disk');
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+// Catch-all route cho SPA
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
