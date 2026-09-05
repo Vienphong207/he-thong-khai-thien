@@ -4,196 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Thần Cấp Toàn Năng</title>
-    <link rel="manifest" href="/manifest.json">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('/bg1.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            transition: background-image 0.6s ease-in-out;
-            color: #ffffff;
-            padding: 20px;
-        }
-        .card {
-            background: rgba(12, 14, 28, 0.82);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 30px 24px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-        }
-        .avatar-box {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px auto;
-        }
-        .avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #e2b714;
-            box-shadow: 0 0 25px rgba(226, 183, 20, 0.6);
-        }
-        .title {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #ffd700, #ff7300, #e066ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-        }
-        .quote-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #d1d5db;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            font-style: italic;
-        }
-        .quote-box span {
-            color: #ffd700;
-            font-weight: bold;
-            font-style: normal;
-        }
-        .tag-btn {
-            background: rgba(0, 230, 118, 0.12);
-            border: 1px solid rgba(0, 230, 118, 0.4);
-            color: #00e676;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        .ky-canh-btn {
-            background: rgba(186, 104, 200, 0.12);
-            border: 1px solid rgba(186, 104, 200, 0.4);
-            color: #ce93d8;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            margin-bottom: 24px;
-        }
-        .action-btn {
-            background: linear-gradient(135deg, #4a00e0, #8e2de2);
-            color: #ffffff;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 6px 20px rgba(142, 45, 226, 0.4);
-            transition: all 0.3s ease;
-        }
-        .action-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 10px rgba(142, 45, 226, 0.2);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { min-height: 100vh; width: 100vw; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #030d1a; color: #ffffff; position: relative; display: flex; justify-content: center; align-items: center; }
+        #matrixCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .core-glow { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(0, 242, 254, 0.35) 0%, rgba(0, 114, 255, 0.15) 45%, rgba(3, 13, 26, 0.85) 85%), linear-gradient(180deg, rgba(0, 242, 254, 0.1) 0%, transparent 100%); pointer-events: none; z-index: 2; }
+        .grid-overlay { position: absolute; inset: 0; background-image: linear-gradient(rgba(0, 242, 254, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 254, 0.08) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: 3; }
+        .welcome-card { position: relative; z-index: 10; background: rgba(6, 20, 40, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(0, 242, 254, 0.6); border-radius: 24px; padding: 28px 20px; max-width: 360px; width: 90%; text-align: center; box-shadow: 0 0 45px rgba(0, 242, 254, 0.4), inset 0 0 20px rgba(0, 242, 254, 0.15); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); transform: scale(1); opacity: 1; }
+        .welcome-card.vanished { opacity: 0; transform: scale(0.8) translateY(-30px); pointer-events: none; }
+        .avatar-box { position: relative; width: 90px; height: 90px; margin: 0 auto 14px auto; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #00f2fe; box-shadow: 0 0 25px rgba(0, 242, 254, 0.8); }
+        .title { font-size: 16px; font-weight: 800; letter-spacing: 1.2px; background: linear-gradient(135deg, #ffffff, #00f2fe, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; text-transform: uppercase; }
+        .quote-box { background: rgba(0, 242, 254, 0.1); border-radius: 14px; padding: 14px; font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-bottom: 18px; border: 1px solid rgba(0, 242, 254, 0.35); text-align: justify; }
+        .tag-btn { background: rgba(0, 242, 254, 0.2); border: 1px solid rgba(0, 242, 254, 0.6); color: #00f2fe; padding: 6px 16px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 18px; box-shadow: 0 0 12px rgba(0, 242, 254, 0.3); font-weight: 600; }
+        .action-btn { background: linear-gradient(135deg, #00f2fe, #0072ff); color: #ffffff; border: none; padding: 13px 24px; border-radius: 30px; font-size: 13px; font-weight: bold; letter-spacing: 1px; cursor: pointer; width: 100%; box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5); transition: all 0.3s; }
+        .action-btn:active { transform: scale(0.95); }
+        .floating-dock { position: fixed; bottom: 24px; z-index: 20; display: flex; align-items: center; background: rgba(6, 20, 40, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 242, 254, 0.4); padding: 8px 18px; border-radius: 30px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.3); }
+        .dock-status { font-size: 11px; color: #00f2fe; font-weight: 600; text-shadow: 0 0 6px rgba(0, 242, 254, 0.5); letter-spacing: 0.5px; }
     </style>
-
-<style>
-  /* 1. Khung đen thành Kính Mờ xuyên thấu nhìn rõ Dị Cảnh */
-  div[class*="bg-"], div[class*="card"], main > div, .max-w-md {
-    background: rgba(15, 23, 42, 0.35) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  }
-
-  /* 2. Chế độ Thu Gọn chỉ chừa nút Vận Hành Thần Thức */
-  .focus-active {
-    background: transparent !important;
-    border: none !important;
-    backdrop-filter: none !important;
-    box-shadow: none !important;
-  }
-  .focus-active .hide-on-focus {
-    opacity: 0 !important;
-    max-height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    pointer-events: none !important;
-    transition: all 0.4s ease !important;
-  }
-</style>
-
 </head>
 <body>
-
-    <div class="card">
-        <div class="avatar-box">
-            <img src="/avatar.jpg" alt="Avatar" class="avatar">
-        </div>
-        
+    <canvas id="matrixCanvas"></canvas>
+    <div class="core-glow"></div>
+    <div class="grid-overlay"></div>
+    <div class="welcome-card" id="welcomeCard">
+        <div class="avatar-box"><img src="/avatar.jpg" alt="Avatar" class="avatar"></div>
         <h1 class="title">HỆ THỐNG THẦN CẤP TOÀN NĂNG</h1>
-        
-        <div class="quote-box">
-            "Đạo hữu, chào mừng đến với thế giới của những kẻ mạnh, <span>Tiểu Phong</span> luôn sẵn sàng đồng hành thăng cấp cùng ngươi!"
-        </div>
-
-        <div>
-            <div class="tag-btn">🟢 Thần Thức Kết Nối • Viễn Phong</div>
-        </div>
-        <div>
-            <div class="ky-canh-btn" id="ky-canh-tag">⚔️ Kỳ Cảnh: Vân Hà Tiên Sơn</div>
-        </div>
-
-        <button class="action-btn" onclick="vanHanhThanThuc()">⚔️ VẬN HÀNH THẦN THỨC</button>
+        <div class="quote-box">Ting! Túc chủ đạt điều kiện kích hoạt hệ thống. Chúc mừng ký chủ đã kích hoạt hệ thống Thần cấp toàn năng. Mời ký chủ lựa chọn Đạo của mình!</div>
+        <div><div class="tag-btn" id="statusTag">⚡ Trạng Thái: Sẵn Sàng Kích Hoạt</div></div>
+        <button class="action-btn" id="mainBtn" onclick="vanHanhThucTai()">⚔️ BẮT ĐẦU VẬN HÀNH</button>
+    </div>
+    <div class="floating-dock">
+        <div class="dock-status" id="systemStatusText">🌌 Giao Diện Viễn Phong | Trạng Thái: Chờ Khởi Động</div>
     </div>
 
+    <audio id="hoangThienDeVoice" src="/welcome.mp3" preload="auto"></audio>
+
     <script>
-        const diCanhList = [
-            { name: "Vân Hà Tiên Sơn", src: "/bg1.jpg" },
-            { name: "Tử Nguyệt Điện Vũ", src: "/bg2.jpg" },
-            { name: "Vạn Đỉnh Sương Mảnh", src: "/bg3.jpg" },
-            { name: "Hàn Lăng Tuyết Thú", src: "/bg4.jpg" }
-        ];
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+        const binaryChars = '01'; const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 13, 26, 0.18)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const char = binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
+                const isBright = Math.random() > 0.85;
+                ctx.fillStyle = isBright ? '#ffffff' : '#00f2fe';
+                ctx.shadowColor = '#00f2fe'; ctx.shadowBlur = isBright ? 12 : 6;
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
 
-        let currentDiCanhIndex = 0;
+        let isPlaying = false;
 
-        // Preload 4 ảnh vào RAM điện thoại
-        diCanhList.forEach(item => {
-            const img = new Image();
-            img.src = item.src;
-        });
+        function vanHanhThucTai() {
+            const card = document.getElementById('welcomeCard');
+            const btn = document.getElementById('mainBtn');
+            const audio = document.getElementById('hoangThienDeVoice');
 
-        function vanHanhThanThuc() {
-            currentDiCanhIndex = (currentDiCanhIndex + 1) % diCanhList.length;
-            const current = diCanhList[currentDiCanhIndex];
-            
-            document.body.style.backgroundImage = `url('${current.src}')`;
-            
-            const tag = document.getElementById('ky-canh-tag');
-            if (tag) {
-                tag.innerText = `⚔️ Kỳ Cảnh: ${current.name}`;
+            // Nếu đang phát mà đạo hữu bấm lần nữa -> ẨN BẢNG LẬP TỨC (SKIP)
+            if (isPlaying) {
+                card.classList.add('vanished');
+                setTimeout(() => { card.style.display = 'none'; }, 600);
+                document.getElementById('systemStatusText').innerText = '🌌 Giao Diện Viễn Phong | Trạng Thái: Đang Vận Hành';
+                return;
+            }
+
+            isPlaying = true;
+            btn.innerText = '⏩ BẤM ĐỂ BỎ QUA...';
+            document.getElementById('statusTag').innerText = '🔊 Đang Phát Truyền Âm';
+
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log(e));
+
+                // Khi đọc hết thoại thì tự động ẩn
+                audio.onended = () => {
+                    card.classList.add('vanished');
+                    setTimeout(() => { card.style.display = 'none'; }, 600);
+                    document.getElementById('systemStatusText').innerText = '🌌 Giao Diện Viễn Phong | Trạng Thái: Đang Vận Hành';
+                };
             }
         }
     </script>
